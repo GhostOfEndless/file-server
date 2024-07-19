@@ -1,0 +1,57 @@
+buildscript {
+    ext {
+        springBootVersion = '3.3.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath(
+                "org.springframework.boot:spring-boot-gradle-plugin:3.3.2")
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'io.freefair.lombok' version '8.6'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter:3.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.2'
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.3.2')
+    runtimeOnly 'org.postgresql:postgresql:42.7.3'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.15.2'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    archiveFileName = 'file-server.jar'
+}
+
+task copyJar(type: Copy){
+    from(bootJar.archiveFile.get())
+    into("src\\main\\docker")
+}
+
+bootJar.finalizedBy copyJar
