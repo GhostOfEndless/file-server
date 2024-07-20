@@ -3,9 +3,26 @@ version: "3.8"
 services:
   file-server-db:
     image: postgres:16.3
+    container_name: file-server-db
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
-      POSTGRES_DB: files_dbч
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_DB: $POSTGRES_DB
+
+  file-server-app:
+    restart: unless-stopped
+    container_name: file-server-app
+    build: .
+    env_file: .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - file-server-db
+    environment:
+      DB_PASSWORD: $POSTGRES_PASSWORD
+      DB_USER: $POSTGRES_USER
+      DB_HOST: file-server-db
+      DB_NAME: $POSTGRES_DB
