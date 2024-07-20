@@ -11,12 +11,16 @@ import java.util.Date;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(exclude = "id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(schema = "user_files", name = "t_user_file")
-public class UserFile extends BaseEntity {
+public class UserFile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "c_title")
     @NotNull

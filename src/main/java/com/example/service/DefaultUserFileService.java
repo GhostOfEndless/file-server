@@ -1,12 +1,10 @@
 package com.example.service;
 
-import com.example.entity.BaseEntity;
 import com.example.entity.UserFile;
 import com.example.repository.UserFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Date;
 import java.util.List;
@@ -19,13 +17,13 @@ public class DefaultUserFileService implements UserFileService {
     private final UserFileRepository userFileRepository;
 
     @Override
-    public List<UserFile> findAllUserFiles(Pageable pageable) {
-        return this.userFileRepository.findAll(pageable).getContent();
+    public Iterable<UserFile> findAllUserFiles(Pageable pageable) {
+        return this.userFileRepository.findAll(pageable);
     }
 
     @Override
-    public BaseEntity createUserFile(String data, String title, String description, Date creationDate) {
-        return this.userFileRepository.save(new UserFile(title, description, creationDate, data));
+    public UserFile createUserFile(String data, String title, String description, Date creationDate) {
+        return this.userFileRepository.save(new UserFile(null, title, description, creationDate, data));
     }
 
     @Override
