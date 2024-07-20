@@ -1,0 +1,22 @@
+insert into user_files.t_user_file(c_title, c_description, c_creation_date, c_data)
+values
+    ('test-file-1', 'test description 1', '2024-03-22 03:49:19.000000', '4jPDLb7jf9VS2drx4PdelEEYygWJXpam2xafa5Iuh/o='),
+    ('test-file-2', 'test description 2', '2024-05-21 19:47:18.000000', 'yZtQsqGao4dNTUGoP6c9DwzzGlj2bBBFLLzijtM969I='),
+    ('test-file-3', 'test description 3', '2024-04-09 21:01:31.000000', '9kePKUVtwfyzalrpTGkh0UKo4O1m7t3bPbiPoD5Cx0M='),
+    ('test-file-4', 'test description 4', '2024-07-19 18:26:00.000000', '47glNlWRpKRqBTjoyQIuzIuK63MBFakqh0KuQt0BVjs='),
+    ('test-file-5', 'test description 5', '2024-06-13 22:52:14.000000', 'ExWfXmEyQZnYvuiz9ZxB8PD9qsCt5xvdCyoCYWweCnw='),
+    ('test-file-6', 'test description 6', '2024-05-18 15:13:40.000000', 'aXy6fY+7pHLg8cBZsbHHiDnmayl0/gdeWEpQgyy9tR4='),
+    ('test-file-7', 'test description 7', '2024-06-10 23:20:55.000000', 'qYsHm5rLej0lNPz4DRCYNV04hQJ+rOD9SjkZ+PCU12k='),
+    ('test-file-8', 'test description 8', '2024-07-02 17:50:01.000000', 'EbKODcv5oe604GVwnoj5GiFl6k6cOiX65S7Kai5c8GE='),
+    ('test-file-9', 'test description 9', '2024-07-18 07:06:49.000000', 'ZI0Ie17b8+K7XDfGEC+Rhqb6k2z3aoddiZrOm26LQ0E='),
+    ('test-file-10', 'test description 10', '2024-05-04 23:11:56.000000', '97c8IdnuN2HFwcLVwH8Wo/UzPmggwSwuYbEOIDzGX2Y='),
+    ('test-file-11', 'test description 11', '2024-04-01 17:46:05.000000', 'u7QqUH9G96P11f/3ncpDI1Bpn84yecy7AeIfSUF468E='),
+    ('test-file-12', 'test description 12', '2024-06-11 22:15:36.000000', '9dV0CTvzSLHTOflSZebg8LgmJZNswUtCDSxtyGGtICA='),
+    ('test-file-13', 'test description 13', '2024-04-28 17:14:58.000000', '2gJ+JsjcpqHtfdCHRM5evAwnTPhiLj0hr2NReQOXJYA='),
+    ('test-file-14', 'test description 14', '2024-06-23 23:30:02.000000', 'VjPch+HU7YYiZvlfV0KOz//kZGizcK1Wkk/w0civRPQ='),
+    ('test-file-15', 'test description 15', '2024-06-13 13:02:09.000000', 'EddCPKD64jXT1HE+fnYhxT4dpaqvcCOkd1lRRAIEQgQ='),
+    ('test-file-16', 'test description 16', '2024-05-10 14:35:44.000000', 'QFLs97QI0DrAQ3H69BYEV7M5X1ex6+HR083gQ2Wji8M='),
+    ('test-file-17', 'test description 17', '2024-04-18 09:13:31.000000', 'IAvn8Dqf+CFTW/k8CXzqiyU/4S+V6OebPzDp0y0ieTA='),
+    ('test-file-18', 'test description 18', '2024-04-01 09:00:58.000000', 'v1ENyzOgKexe2A8Kee+x8+Sx4iQ7IBz/LJHyxLRTiM8='),
+    ('test-file-19', 'test description 19', '2024-05-05 03:22:10.000000', '/cLckZAD73bmAmLEck++EbE+2QTihgJO3Q73SneobPA='),
+    ('test-file-20', 'test description 20', '2024-06-18 20:48:43.000000', 'lPbciHSRz8YodRqDAoZUQ6TFyEWfWVM7hqwln4BY93s=');
