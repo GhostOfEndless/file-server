@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.entity.BaseEntity;
 import com.example.entity.UserFile;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +12,7 @@ public interface UserFileService {
 
     List<UserFile> findAllUserFiles(Pageable pageable);
 
-    void createUserFile(String data, String title, String description, Date creationDate);
+    BaseEntity createUserFile(String data, String title, String description, Date creationDate);
 
     Optional<UserFile> findUserFile(Long id);
 }
