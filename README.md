@@ -1,3 +1,33 @@
+# Тестовое задание на CaseLab Java
+## Описание решения
+ Стек технологий:
+ * Spring Boot (Web, JPA, Validation, Test, Testcontainers)
+ * Flyway
+ * PostgreSQL
+ * Gradle
+ * Testcontainers
+ * JUnit
+ * Docker/Docker Compose
+
+ В каталоге `src/main/java/com/example` лежат пакеты, реализующие основную логику работы приложения:
+ * `controller` - здесь находится `UserFileRestController`, отвечающий за взаимодействие с пользователем 
+ посредством HTTP-запросов. `BadRequestControllerAdvice` обрабатывает ошибки ввода пользователя и выводит 
+ локализованное сообщение об ошибке. В пакете `payload` лежит record `UserFilePayload` - это объект, который получает 
+ сервер от пользователя при создании файла.
+ * `entity` - содержит единственный entity-класс `UserFile`. Объекты этого класса сохраняются в базу данных и 
+ возвращаются пользователю в `UserFileRestController`.
+ * `repository` - тут располагается интерфейс `UserFileRepository`, который работает с БД.
+ * `service` - в этом пакете находится единственный интерфейс `UserFileService` и реализующий его класс 
+ `DefaultUserFileService`. Этот сервис выступает прослойкой между слоем контроллеров и слоем репозиториев.
+
+В `src/main/resources/db/migration` находится файл миграции БД `V1__Basic_schema.sql`, 
+создающий в новой БД схему и таблицу. Тестовая директория миграций `src/test/resources/db/migration` содержит миграцию 
+`V2__Test_data.sql` для создания тестовых данных.
+
+Директория `src/test/java/com/example` содержит абстрактный класс `BaseTest`, настраивающий тестовый контейнер 
+для базы данных, а в пакете `controller` располагается класс тестов `UserFileRestControllerTest`, покрывающий основные
+случаи при использовании API приложения.
+
 ## Инструкция по запуску
 **Требования: в системе должен быть установлен docker и docker-compose**
 
@@ -87,7 +117,7 @@
     * URI: *http://localhost:8080/file-server-api/files/page/{pageNumber}?size={pageSize}*
     * Пример запроса:
       ```
-      curl --request GET http://localhost:8080/file-server-api/files/1?size=5
+      curl --request GET http://localhost:8080/file-server-api/files/page/0?size=5
       ```
     * Пример ответа:
       ```
