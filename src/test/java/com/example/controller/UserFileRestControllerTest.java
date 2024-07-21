@@ -2,21 +2,30 @@ package com.example.controller;
 
 import com.example.BaseTest;
 import com.example.controller.payload.UserFilePayload;
+import com.example.entity.UserFile;
+import com.example.service.UserFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
+import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,13 +35,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserFileRestControllerTest extends BaseTest {
 
     private final MockMvc mockMvc;
+    private final UserFileService userFileService;
 
     private ObjectMapper objectMapper;
 
     private final UserFilePayload payload = UserFilePayload.builder()
             .title("Test title")
             .description("Test description")
-            .creationDate(Date.from(Instant.now()))
+            .creationDate(Timestamp.from(Instant.now()))
             .data("nOJ38MDjk61i7ndzjZkL3Q==")
             .build();
 
@@ -43,22 +53,22 @@ public class UserFileRestControllerTest extends BaseTest {
 
     @SneakyThrows
     @Test
-    void saveUserFile_success() {
+    void createUserFile_success() {
         String uri = "/file-server-api/files";
 
-        MvcResult mvcResult = mockMvc.perform(post(uri)
+        var mvcResult = mockMvc.perform(post(uri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        assertFalse(mvcResult.getResponse().getContentAsString().isEmpty());
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("id"));
     }
 
     @SneakyThrows
     @Test
-    void saveUserFile_invalidRequest() {
+    void createUserFile_titleIsNull() {
         String uri = "/file-server-api/files";
 
         mockMvc.perform(post(uri)
@@ -67,5 +77,108 @@ public class UserFileRestControllerTest extends BaseTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andReturn();
+    }
+
+    @SneakyThrows
+    @Test
+    void createUserFile_titleInvalidSize() {
+        String uri = "/file-server-api/files";
+
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload).replace(payload.title(), "aa")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andReturn();
+    }
+
+    @SneakyThrows
+    @Test
+    void createUserFile_descriptionIsNull() {
+        String uri = "/file-server-api/files";
+
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload).replace(
+                                "\"description\":\"Test description\",", "")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andReturn();
+    }
+
+    @SneakyThrows
+    @Test
+    void createUserFile_dataIsNull() {
+        String uri = "/file-server-api/files";
+
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload).replace(
+                                "\"data\":\"nOJ38MDjk61i7ndzjZkL3Q==\",", "")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andReturn();
+    }
+
+    @SneakyThrows
+    @Test
+    void createUserFile_creationDateInvalidFormat() {
+        String uri = "/file-server-api/files";
+
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateFormat df = new SimpleDateFormat(pattern);
+        String creationDate = df.format(payload.creationDate());
+
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload).replace(creationDate,
+                                "2024-10-21d18:36:54")))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andReturn();
+    }
+
+    @SneakyThrows
+    @Test
+    void findUserFile_success() {
+        String uri = "/file-server-api/files/1";
+
+        var mvcResult = mockMvc.perform(get(uri))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        var resultUserFile = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UserFile.class);
+        var dbUserFile = userFileService.findUserFile(1L);
+        assertTrue(dbUserFile.isPresent());
+
+        var userFile = dbUserFile.get();
+
+        assertEquals(userFile, resultUserFile);
+    }
+
+    @SneakyThrows
+    @Test
+    void findAllUserFiles_success() {
+        String uri = "/file-server-api/files/page/0?size=5";
+
+        var mvcResult = mockMvc.perform(get(uri))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        Pageable pageable = PageRequest
+                .of(0, 5, Sort.by("creationDate")
+                        .descending());
+
+        Iterator<UserFile> userFiles = this.userFileService.findAllUserFiles(pageable).iterator();
+
+        userFiles.forEachRemaining(userFile -> {
+            try {
+                assertTrue(mvcResult.getResponse().getContentAsString().contains(objectMapper.writeValueAsString(userFile)));
+            } catch (UnsupportedEncodingException | JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

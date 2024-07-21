@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -36,7 +36,7 @@ public class UserFile {
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
     @JsonProperty("creation_date")
-    private Date creationDate;
+    private Timestamp creationDate;
 
     @Column(name = "c_data")
     @NotNull

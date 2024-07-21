@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -22,7 +21,7 @@ public class DefaultUserFileService implements UserFileService {
     }
 
     @Override
-    public UserFile createUserFile(String data, String title, String description, Date creationDate) {
+    public UserFile createUserFile(String data, String title, String description, Timestamp creationDate) {
         return this.userFileRepository.save(new UserFile(null, title, description, creationDate, data));
     }
 

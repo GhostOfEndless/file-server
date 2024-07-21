@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Builder
 public record UserFilePayload(
@@ -25,6 +25,6 @@ public record UserFilePayload(
         @NotNull(message = "{file-server.files.create.creation_date.is_null}")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
         @JsonProperty("creation_date")
-        Date creationDate
+        Timestamp creationDate
 ) {
 }
