@@ -44,6 +44,10 @@
       ```
       docker compose up
       ```
+      или
+      ```
+      sudo docker compose up
+      ```
     * Для windows систем:
       ```
       docker-compose up
